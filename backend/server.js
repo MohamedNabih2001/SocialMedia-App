@@ -71,6 +71,12 @@ app.use((req, res, next) => {
 });
 
 /////////////////////////////////////
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "SocialMedia Backend API is running",
+  });
+});
 
 app.use("/api/comments", commentRouter);
 app.use("/api/notifications", notificationRouter);
