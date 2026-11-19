@@ -23,7 +23,7 @@ export const signUp = catchAsync(async (req, res, next) => {
     return next(new AppError("Not Valid Data", 400));
   }
   let image;
-  if(req.file.buffer){
+  if(req.file?.buffer){
     const uploadImage = await UploadToCloudinary("Users", req.file.buffer);
     image = {
       imageUrl: uploadImage.secure_url,
