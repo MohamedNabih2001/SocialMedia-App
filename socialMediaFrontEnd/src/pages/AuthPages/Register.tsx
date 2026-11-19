@@ -1,9 +1,11 @@
+
 import { ImageUp, Key, Mail, User } from 'lucide-react';
 import Input from '../../components/form/Input';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import useRegister from '../../Queries/Auth/useRegister';
 import Spinner from '../../components/global/Spinner';
+
 const signInData = [
   {
     type: 'text',
@@ -48,6 +50,7 @@ const signInData = [
     icon: <ImageUp size={20} />,
   },
 ] as const;
+
 export type FormDataRegisterType = {
   firstName: string;
   lastName: string;
@@ -55,8 +58,9 @@ export type FormDataRegisterType = {
   password: string;
   passwordConfirm: string;
   age: number;
-  image: FileList;
+  image?: FileList;
 };
+
 export type FormDataEditedRegisterType = {
   firstName: string;
   lastName: string;
@@ -64,8 +68,9 @@ export type FormDataEditedRegisterType = {
   password: string;
   passwordConfirm: string;
   age: number;
-  image: File;
+  image?: File;
 };
+
 function Register() {
   function isEmail(email: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -73,7 +78,8 @@ function Register() {
 
   ////////////////////////////////
   function isPassword(password: string, passwordConfirm: string): boolean {
-    const isPqsswordValid = password.length > 6 && password === passwordConfirm;
+    const isPqsswordValid =
+      password.length > 6 && password === passwordConfirm;
     return isPqsswordValid;
   }
 
@@ -86,29 +92,42 @@ function Register() {
   const filesNumber = watch('image')?.length;
   ////////////////////////////////
   const resetFile = () => resetField('image');
-  ////////////////////////////////(
+  ////////////////////////////////
   function onSubmit(data: FormDataRegisterType) {
     const isEmailValid = isEmail(data.email);
-    const isPassowrdCorrect = isPassword(data.password, data.passwordConfirm);
+    const isPassowrdCorrect = isPassword(
+      data.password,
+      data.passwordConfirm,
+    );
+
     if (!isEmailValid || !isPassowrdCorrect) {
       console.log('Please Provide valid data email and password');
       return 'Not valid';
     }
+
     const dataEdited: FormDataEditedRegisterType = {
       ...data,
-      image: data.image[0],
+      image: data.image?.[0],
     };
+
     const array = Object.entries(dataEdited);
     const formData: FormData = new FormData();
+
     array.forEach(([key, value]) => {
+      if (key === 'image' && !value) {
+        return;
+      }
+
       if (value instanceof File) {
         formData.append(key, value);
       } else {
         formData.append(key, String(value));
       }
     });
+
     signUp(formData);
   }
+
   if (isRegistering) {
     return (
       <div className="w-full p-2 flexCenter">
