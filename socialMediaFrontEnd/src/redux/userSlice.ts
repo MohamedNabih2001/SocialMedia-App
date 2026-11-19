@@ -9,7 +9,7 @@ export const refreshToken = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const res = await api.get('/users/refresh');
-      socket = io('http://localhost:8000', {
+      socket = io(import.meta.env.VITE_BACKEND_URL, {
         auth: {
           token: res.data.data.token,
         },
@@ -65,7 +65,7 @@ const UserSlice = createSlice({
       state.isAdmin = action.payload?.role === 'admin' ? true : false;
       state.isAuth = true;
       state.token = action.payload.token;
-      socket = io('http://localhost:8000', {
+      socket = io(import.meta.env.VITE_BACKEND_URL, {
         auth: {
           token: action.payload.token,
         },
