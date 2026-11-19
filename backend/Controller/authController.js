@@ -22,11 +22,21 @@ export const signUp = catchAsync(async (req, res, next) => {
   if (!isSamePassword) {
     return next(new AppError("Not Valid Data", 400));
   }
-  const uploadImage = await UploadToCloudinary("Users", req.file.buffer);
-  const image = {
-    imageUrl: uploadImage.secure_url,
-    publicId: uploadImage.public_id,
-  };
+  let image;
+  if(req.file.buffer){
+    const uploadImage = await UploadToCloudinary("Users", req.file.buffer);
+    image = {
+      imageUrl: uploadImage.secure_url,
+      publicId: uploadImage.public_id,
+    };
+
+  }else{
+    image ={
+        imageUrl:
+          "https://res.cloudinary.com/djitv3kwb/image/upload/v1781046513/profileAdmin_vk79wj.png",
+        publicId: "Social_Media/Users/profileAdmin_vk79wj",
+      }
+  }
   const name = `${userData.firstName} ${userData.lastName}`;
   userData.role = userData.role ? userData.role : "user";
   const newUser = await User.create({
