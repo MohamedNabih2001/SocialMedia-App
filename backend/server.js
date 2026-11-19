@@ -80,15 +80,15 @@ app.use("/api/users", userRouter);
 app.use("/api/reactsComments", reactCommentRouter);
 app.use("/api/reactsPosts", reactPostRouter);
 /////////////////////////////////////
+app.use((req, res, next) => {
+  const error = new Error(`Route not found: ${req.originalUrl}`);
+  error.statusCode = 404;
+  next(error);
+});
+
 app.use(globalErrorHandler);
 
-/////////////////////////////////////
-app.use((req, res) => {
-  res.status(404).json({
-    message: "Route not found",
-  });
-});
-const port = process.env.PORT;
+const port = process.env.PORT || 8000;
 mongoose
   .connect(process.env.MONGODB_URL)
   .then(() => console.log("Mongo is connected"))

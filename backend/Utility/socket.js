@@ -15,7 +15,7 @@ export function initializeSocket(server) {
   io.on("connection", async (socket) => {
     const token = socket.handshake.auth?.token;
     if (!token) {
-      socket.disconnect(true);
+      return socket.disconnect(true);
     }
     try {
       const payload = await jwt.verify(token, process.env.AT_SECRET);
